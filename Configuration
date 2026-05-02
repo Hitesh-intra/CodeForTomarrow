@@ -1,5 +1,5 @@
 since i am unable to access external apis
-     i have mainatin my pgsql database in local system this is the credintial 
+     i have maitain  my pgsql database in local system this is the credintial 
       user: 'postgres',
   // PostgreSQL username
   host: 'localhost',
