@@ -1,0 +1,99 @@
+const {
+  Client
+} = require('pg');
+const express = require('express');
+const sessions = require('express-session');
+
+const Cache = require('node-cache');
+const myCache = new Cache();
+
+//mycache for enabaling local cache
+
+const servers = express();
+
+const client = new Client({
+  user: 'postgres',
+  // PostgreSQL username
+  host: 'localhost',
+  // Database host
+  database: 'postgres',
+  // Database name
+  password: '1056',
+  // PostgreSQL password
+  port: 5432,
+  // PostgreSQL default port
+});
+
+
+
+servers.use(sessions({
+  secret: "c1a033a40e0d8b2787258012e94080173a1d2",
+  saveUninitialized: false,
+  //dont save empty session
+  resave: false,
+  //dont resave empty session if not modified
+  cookie: {
+    secure: false //for production make it true
+  }
+})) servers.use(express.json());
+
+servers.use(status()) servers.use((err, req, res, next) = >{
+  console.error(err); // Log the error to console for debugging
+  res.status(500).send({
+    message: "Internal Server Error"
+  });
+});
+
+servers.post('/EnlistTemperature', (request, response) = >{
+
+  //taking input data 
+  Let Cities = request.body.cities
+
+  const fetch = await client.connect() // connecting pgsql database
+
+  let currrentCities = 'WITH temp_anlytics as
+(
+select * from public.cities
+where "name" in (Cities)  //fetching records of temp and theire cities
+
+)'
+
+  let AverageTemp = await client.query('
+       ${currentcities}
+select avg("Temp")as "Average_Temp" from temp_anlytics').rows()
+
+
+  let HighestTemp = client.query('
+${currentcities}
+     select "name","Temp" from temp_anlytics
+where "Temp"=(select max("Temp") from temp_anlytics)
+).rows()
+
+
+  let LowestTemp = client.query('
+${currentcities}
+     select "name","Temp" from temp_anlytics
+where "Temp"=(select min("Temp") from temp_anlytics)
+).rows()
+
+
+ response.status(200).send({data:{
+
+  "AverageTemp":AverageTemp,
+  "HighesTemp"=HighestTemp."Temp",
+   "HighestTempCity"=HighestTemp.name,
+   "LowestTempCity=LowestTemp.name,
+   "LowestTemp=LowestTemp
+  
+
+});
+
+
+servers.listen(8080, () => {
+  console.log("Server is listening on port 8080");
+});
+
+
+
+//dependencies $ npm install pg
+'
