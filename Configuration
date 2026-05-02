@@ -1,0 +1,36 @@
+since i am unable to access external apis
+     i have mainatin my pgsql database in local system this is the credintial 
+      user: 'postgres',
+  // PostgreSQL username
+  host: 'localhost',
+  // Database host
+  database: 'postgres',
+  // Database name
+  password: '1056',
+  // PostgreSQL password
+  port: 5432,
+  // PostgreSQL default port
+
+
+my sample table
+
+
+-- Table: public.cities
+
+-- DROP TABLE IF EXISTS public.cities;
+
+CREATE TABLE IF NOT EXISTS public.cities
+(
+    city_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    state_id uuid,
+    country_id uuid,
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    population integer,
+    "Temp" integer,
+    CONSTRAINT cities_pkey PRIMARY KEY (city_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.cities
+    OWNER to postgres;
